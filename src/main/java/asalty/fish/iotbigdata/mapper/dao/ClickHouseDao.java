@@ -5,7 +5,10 @@ import org.springframework.context.annotation.Configuration;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -84,5 +87,17 @@ public class ClickHouseDao {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public <T> List<T> convertResultSetToList(ResultSet rs, Class<T> clazz) {
+        List<T> list = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                list.add(convertResultSetToClass(rs, clazz));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
 import java.sql.*;
+import java.util.List;
 
 @SpringBootTest
 class IotBigDataApplicationTests {
@@ -27,11 +28,9 @@ class IotBigDataApplicationTests {
     @Test
     public void testClickHouse() {
         try {
-            ResultSet rs = clickHouseStatement.executeQuery("select * from tutorial.hits_v1 limit 1");
-            while (rs.next()) {
-                hits_v1 hit = clickHouseDao.convertResultSetToClass(rs, hits_v1.class);
-                System.out.println(new Gson().toJson(hit));
-            }
+            ResultSet rs = clickHouseStatement.executeQuery("select * from tutorial.hits_v1 limit 2");
+            List<hits_v1> list = clickHouseDao.convertResultSetToList(rs, hits_v1.class);
+            System.out.println(new Gson().toJson(list));
         } catch (Exception e) {
             e.printStackTrace();
         }
