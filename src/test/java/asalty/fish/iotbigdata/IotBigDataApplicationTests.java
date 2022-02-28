@@ -1,7 +1,6 @@
 package asalty.fish.iotbigdata;
 
-import asalty.fish.iotbigdata.config.ClickHouseConfig;
-import asalty.fish.iotbigdata.mapper.dao.ClickHouseDao;
+import asalty.fish.iotbigdata.clickhouseJpa.ClickHouseMapper;
 import asalty.fish.iotbigdata.mapper.entity.hits_v1;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ class IotBigDataApplicationTests {
     Statement clickHouseStatement;
 
     @Resource
-    ClickHouseDao clickHouseDao;
+    ClickHouseMapper clickHouseDao;
 
     @Test
     void contextLoads() {

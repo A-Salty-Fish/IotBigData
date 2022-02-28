@@ -1,11 +1,10 @@
-package asalty.fish.iotbigdata.mapper.dao;
+package asalty.fish.iotbigdata.clickhouseJpa;
 
 import org.springframework.context.annotation.Configuration;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date 2022/2/28 14:50
  */
 @Configuration
-public class ClickHouseDao {
+public class ClickHouseMapper {
     ConcurrentHashMap<String, HashMap<String, Integer>> columnNameMap = new ConcurrentHashMap<>(16);
 
     public void addColumnName(String tableName, String columnName, Integer columnIndex) {
@@ -59,7 +58,7 @@ public class ClickHouseDao {
             T t = clazz.newInstance();
             for (Field field : clazz.getDeclaredFields()) {
                 String columnName = field.getName();
-                Integer columnIndex = columnNameMap.get(tableName).get(columnName);
+                Integer columnIndex =getColumnIndex(tableName, columnName);
                 String methodName = "set" + columnName.substring(0, 1).toUpperCase() + columnName.substring(1);
                 Class<?> type = field.getType();
                 Method method = clazz.getMethod(methodName, type);
