@@ -20,11 +20,6 @@ spring:
         max-active: 10
         max-wait: 1000
       shutdown-timeout: 1000
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/iotdata?useUnicode=true&characterEncoding=utf-8
-    username: root
-    password: 123456
   clickhouse:
     driver-class-name: com.github.housepower.jdbc.ClickHouseDriver
     url: jdbc:clickhouse://localhost
@@ -33,9 +28,21 @@ spring:
     username: default
     password:
   jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
+    clickhouse:
+      driver-class-name: com.github.housepower.jdbc.ClickHouseDriver
+      url: jdbc:clickhouse://localhost
+      port: 19000
+      database: tutorial
+      username: default
+      password:
+      table-update: true
+      hikari:
+        # 连接池的最大连接数
+        maximum-pool-size: 10
+        # 空闲超时
+        idleTimeout: 1000000
+        # 连接超时时间
+        connection-timeout: 5000
 
   kafka:
     bootstrap-servers: 127.0.0.1:9092
