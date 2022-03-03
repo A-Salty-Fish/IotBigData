@@ -1,5 +1,7 @@
 package asalty.fish.iotbigdata.benchmark;
 
+import asalty.fish.clickhousejpa.CRUDStatementHandler.handler.InsertStatementHandler;
+import asalty.fish.clickhousejpa.jdbc.ClickHouseJdbcConfig;
 import asalty.fish.iotbigdata.IotBigDataApplication;
 import asalty.fish.iotbigdata.dao.TestCreateTableDao;
 import asalty.fish.iotbigdata.entity.TestCreateTable;
@@ -7,18 +9,15 @@ import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
-import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -29,26 +28,37 @@ import java.util.concurrent.TimeUnit;
  */
 
 @BenchmarkMode(Mode.Throughput)
-@Warmup(iterations = 1)
-@Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
-@Threads(24)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
-public class InsertBenchMark {
+public class InsertBenchMark2 {
 
     private ConfigurableApplicationContext context;
 
     TestCreateTableDao testCreateTableDao;
 
     TestCreateTable testCreateTable;
+
+    InsertStatementHandler insertStatementHandler;
+
+    ClickHouseJdbcConfig clickHouseJdbcConfig;
+
+    String sql = "INSERT INTO test_create_table( id, WatchID, JavaEnable, Title, GoodEvent, UserAgentMajor, URLDomain, CreateTime, CreateDay) FORMAT Values ( 343748357 ,  394323340 ,  1 ,  'title74953' ,  'goodEvent77516' ,  84297 ,  'testUserDefinedColumn3238' ,  '2022-03-03 19:14:14' ,  '2022-03-03' )";
     /**
      * setup初始化容器的时候只执行一次
      */
     @Setup(Level.Trial)
-    public void init(){
+    public void init() throws Exception {
         context = SpringApplication.run(IotBigDataApplication.class);
         testCreateTableDao = context.getBean(TestCreateTableDao.class);
         testCreateTable = getTestTimeEntity();
+        insertStatementHandler = context.getBean(InsertStatementHandler.class);
+//        sql = insertStatementHandler.getStatement(TestCreateTableDao.class.getMethod("create", TestCreateTable.class), new Object[] {testCreateTable}, testCreateTableDao.getClass());
+        clickHouseJdbcConfig = context.getBean(ClickHouseJdbcConfig.class);
+    }
+
+    @TearDown
+    public void tearDown() {
+        context.close();
     }
 
     public TestCreateTable getTestTimeEntity() {
@@ -67,14 +77,25 @@ public class InsertBenchMark {
     }
 
     @Benchmark
-    public void insert(Blackhole blackhole) {
+    public void insertByProxy(Blackhole blackhole) {
         testCreateTableDao.create(testCreateTable);
+    }
+
+    @Benchmark
+    public void insertByRowSql(Blackhole blackhole) throws Exception {
+        clickHouseJdbcConfig.threadLocalStatement().executeQuery(sql);
     }
 
     public static void main(String[] args) throws Exception {
         Options options = new OptionsBuilder()
-                .include(InsertBenchMark.class.getSimpleName())
+                .include(InsertBenchMark2.class.getSimpleName())
                 .resultFormat(ResultFormatType.JSON)
+                .measurementIterations(1)
+                .measurementTime(TimeValue.seconds(5))
+                .threads(12)
+                .warmupForks(0)
+                .warmupIterations(0)
+                .forks(1)
                 .build();
         new Runner(options).run();
     }
