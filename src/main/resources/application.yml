@@ -38,7 +38,7 @@ spring:
       table-update: true
       hikari:
         # 连接池的最大连接数
-        maximumPoolSize: 10
+        maximumPoolSize: 60
         # 空闲超时
         idleTimeout: 1000000
         # 连接超时时间

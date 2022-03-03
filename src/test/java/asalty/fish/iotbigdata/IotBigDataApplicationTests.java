@@ -2,6 +2,7 @@ package asalty.fish.iotbigdata;
 
 import asalty.fish.iotbigdata.dao.TestCreateTableDao;
 import asalty.fish.iotbigdata.entity.TestCreateTable;
+import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -9,6 +10,7 @@ import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 
 @SpringBootTest
 class IotBigDataApplicationTests {
@@ -18,7 +20,7 @@ class IotBigDataApplicationTests {
 
     @Test
     void contextLoads() {
-        System.out.println(testCreateTableDao.findAllByWatchID(0L).size());
+        System.out.println(new Gson().toJson(testCreateTableDao.findAllByWatchID(541755838L)));
     }
 
     public TestCreateTable getTestTimeEntity() {
@@ -38,9 +40,22 @@ class IotBigDataApplicationTests {
 
     @Test
     void testCreateTable() {
+//        testCreateTableDao.create(getTestTimeEntity());
         for (int i = 0; i < 100; i++) {
             testCreateTableDao.create(getTestTimeEntity());
         }
+    }
+
+    @Test
+    void testThreadCreateTable() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(10);
+        for (int i = 0; i < 10; i++) {
+            new Thread(() -> {
+                testCreateTable();
+                latch.countDown();
+            }).start();
+        }
+        latch.await();
     }
 
     @Test

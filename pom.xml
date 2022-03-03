@@ -20,7 +20,7 @@
         <dependency>
             <groupId>asalty.fish</groupId>
             <artifactId>clickhouse-jpa</artifactId>
-            <version>1.0.1-release</version>
+            <version>1.0.2-release</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -59,6 +59,17 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>4.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>1.33</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <version>1.33</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
