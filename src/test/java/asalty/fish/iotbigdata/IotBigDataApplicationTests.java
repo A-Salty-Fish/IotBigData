@@ -2,15 +2,13 @@ package asalty.fish.iotbigdata;
 
 import asalty.fish.iotbigdata.dao.TestCreateTableDao;
 import asalty.fish.iotbigdata.entity.TestCreateTable;
-import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
-import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Random;
 
 @SpringBootTest
 class IotBigDataApplicationTests {
@@ -25,13 +23,14 @@ class IotBigDataApplicationTests {
 
     public TestCreateTable getTestTimeEntity() {
         TestCreateTable h = new TestCreateTable();
-        h.setId(0L);
-        h.setGoodEvent("goodEvent");
-        h.setJavaEnable(false);
-        h.setTitle("title");
-        h.setWatchID(1L);
-        h.setUserAgentMajor(222);
-        h.setTestUserDefinedColumn("7777");
+        Random random = new Random();
+        h.setId((long) random.nextInt(1000000000));
+        h.setGoodEvent("goodEvent" + random.nextInt(100000));
+        h.setJavaEnable(random.nextBoolean());
+        h.setTitle("title" + random.nextInt(100000));
+        h.setWatchID((long) random.nextInt(1000000000));
+        h.setUserAgentMajor(random.nextInt(100000));
+        h.setTestUserDefinedColumn("testUserDefinedColumn" + random.nextInt(100000));
         h.setCreateDay(LocalDate.now());
         h.setCreateTime(LocalDateTime.now());
         return h;
@@ -39,6 +38,15 @@ class IotBigDataApplicationTests {
 
     @Test
     void testCreateTable() {
-        testCreateTableDao.create(getTestTimeEntity());
+        for (int i = 0; i < 100; i++) {
+            testCreateTableDao.create(getTestTimeEntity());
+        }
+    }
+
+    @Test
+    void testStatistics() {
+//        System.out.println(Long.parseLong("8344639403183861893"));
+        System.out.println(testCreateTableDao.maxWatchID());
+        System.out.println(testCreateTableDao.avgWatchID());
     }
 }

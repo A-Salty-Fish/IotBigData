@@ -21,4 +21,12 @@ public class TestCreateTableDao {
     public void create(TestCreateTable testCreateTable) {
         return;
     }
+
+    public Long maxWatchID() {
+        return null;
+    }
+
+    public Double avgWatchID() {
+        return null;
+    }
 }
