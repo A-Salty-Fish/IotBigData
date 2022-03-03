@@ -17,4 +17,8 @@ public class TestCreateTableDao {
     public List<TestCreateTable> findAllByWatchID(Long watchID) {
         return null;
     }
+
+    public void create(TestCreateTable testCreateTable) {
+        return;
+    }
 }
