@@ -43,6 +43,14 @@ spring:
         idleTimeout: 1000000
         # 连接超时时间
         connectionTimeout: 5000
+      hibernate:
+        ddl-auto: update
+        show-sql: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/iotdata?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 123456
 
   kafka:
     bootstrap-servers: 127.0.0.1:9092
