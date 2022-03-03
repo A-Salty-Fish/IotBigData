@@ -38,11 +38,11 @@ spring:
       table-update: true
       hikari:
         # 连接池的最大连接数
-        maximum-pool-size: 10
+        maximumPoolSize: 10
         # 空闲超时
         idleTimeout: 1000000
         # 连接超时时间
-        connection-timeout: 5000
+        connectionTimeout: 5000
 
   kafka:
     bootstrap-servers: 127.0.0.1:9092
