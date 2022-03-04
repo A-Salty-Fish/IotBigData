@@ -1,7 +1,9 @@
 package asalty.fish.iotbigdata;
 
 import asalty.fish.iotbigdata.dao.TestCreateTableDao;
+import asalty.fish.iotbigdata.dao.TestMysqlTableDao;
 import asalty.fish.iotbigdata.entity.TestCreateTable;
+import asalty.fish.iotbigdata.entity.TestMysqlTable;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -63,5 +65,63 @@ class IotBigDataApplicationTests {
 //        System.out.println(Long.parseLong("8344639403183861893"));
         System.out.println(testCreateTableDao.maxWatchID());
         System.out.println(testCreateTableDao.avgWatchID());
+    }
+
+    @Resource
+    TestMysqlTableDao testMysqlTableDao;
+
+    public TestMysqlTable getTestMysqlTable() {
+        TestMysqlTable h = new TestMysqlTable();
+        Random random = new Random();
+//        h.setId((long) random.nextInt(1000000000));
+        h.setGoodEvent("goodEvent" + random.nextInt(100000));
+        h.setJavaEnable(random.nextBoolean());
+        h.setTitle("title" + random.nextInt(100000));
+        h.setWatchID((long) random.nextInt(1000000000));
+        h.setUserAgentMajor(random.nextInt(100000));
+        h.setTestUserDefinedColumn("testUserDefinedColumn" + random.nextInt(100000));
+        h.setCreateDay(LocalDate.now());
+        h.setCreateTime(LocalDateTime.now());
+        return h;
+    }
+
+    public TestMysqlTable getInsertTestMysqlTable() {
+        TestMysqlTable h = new TestMysqlTable();
+        h.setCreateDay(testMysqlTable.getCreateDay());
+        h.setCreateTime(testMysqlTable.getCreateTime());
+        h.setGoodEvent(testMysqlTable.getGoodEvent());
+        h.setJavaEnable(testMysqlTable.getJavaEnable());
+        h.setTitle(testMysqlTable.getTitle());
+        h.setWatchID(testMysqlTable.getWatchID());
+        h.setUserAgentMajor(testMysqlTable.getUserAgentMajor());
+        h.setTestUserDefinedColumn(testMysqlTable.getTestUserDefinedColumn());
+        return h;
+    }
+
+    TestMysqlTable testMysqlTable = getTestMysqlTable();
+
+    @Test
+    void testMysql() {
+        for (int i =0 ;i<100;i++) {
+//            testMysqlTable.setId(null);
+            testMysqlTableDao.save(getInsertTestMysqlTable());
+        }
+    }
+
+    @Test
+    void testThreadCreateMysqlTable() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(10);
+        for (int i = 0; i < 10; i++) {
+            new Thread(() -> {
+                try {
+                    testMysql();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    latch.countDown();
+                }
+            }).start();
+        }
+        latch.await();
     }
 }

@@ -4,7 +4,9 @@ import asalty.fish.clickhousejpa.CRUDStatementHandler.handler.InsertStatementHan
 import asalty.fish.clickhousejpa.jdbc.ClickHouseJdbcConfig;
 import asalty.fish.iotbigdata.IotBigDataApplication;
 import asalty.fish.iotbigdata.dao.TestCreateTableDao;
+import asalty.fish.iotbigdata.dao.TestMysqlTableDao;
 import asalty.fish.iotbigdata.entity.TestCreateTable;
+import asalty.fish.iotbigdata.entity.TestMysqlTable;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.results.format.ResultFormatType;
@@ -42,6 +44,10 @@ public class InsertBenchMark2 {
 
     ClickHouseJdbcConfig clickHouseJdbcConfig;
 
+    TestMysqlTableDao testMysqlTableDao;
+
+    TestMysqlTable testMysqlTable;
+
     String sql = "INSERT INTO test_create_table( id, WatchID, JavaEnable, Title, GoodEvent, UserAgentMajor, URLDomain, CreateTime, CreateDay) FORMAT Values ( 343748357 ,  394323340 ,  1 ,  'title74953' ,  'goodEvent77516' ,  84297 ,  'testUserDefinedColumn3238' ,  '2022-03-03 19:14:14' ,  '2022-03-03' )";
     /**
      * setup初始化容器的时候只执行一次
@@ -52,6 +58,8 @@ public class InsertBenchMark2 {
         testCreateTableDao = context.getBean(TestCreateTableDao.class);
         testCreateTable = getTestTimeEntity();
         insertStatementHandler = context.getBean(InsertStatementHandler.class);
+        testMysqlTableDao = context.getBean(TestMysqlTableDao.class);
+        testMysqlTable = getTestMysqlTable();
 //        sql = insertStatementHandler.getStatement(TestCreateTableDao.class.getMethod("create", TestCreateTable.class), new Object[] {testCreateTable}, testCreateTableDao.getClass());
         clickHouseJdbcConfig = context.getBean(ClickHouseJdbcConfig.class);
     }
@@ -76,15 +84,49 @@ public class InsertBenchMark2 {
         return h;
     }
 
-    @Benchmark
-    public void insertByProxy(Blackhole blackhole) {
-        testCreateTableDao.create(testCreateTable);
+    // 随机生成一个测试实体
+    public TestMysqlTable getTestMysqlTable() {
+        TestMysqlTable h = new TestMysqlTable();
+        Random random = new Random();
+        h.setGoodEvent("goodEvent" + random.nextInt(100000));
+        h.setJavaEnable(random.nextBoolean());
+        h.setTitle("title" + random.nextInt(100000));
+        h.setWatchID((long) random.nextInt(1000000000));
+        h.setUserAgentMajor(random.nextInt(100000));
+        h.setTestUserDefinedColumn("testUserDefinedColumn" + random.nextInt(100000));
+        h.setCreateDay(LocalDate.now());
+        h.setCreateTime(LocalDateTime.now());
+        return h;
+    }
+
+    //  克隆一个测试实体
+    public TestMysqlTable getInsertTestMysqlTable() {
+        TestMysqlTable h = new TestMysqlTable();
+        h.setCreateDay(testMysqlTable.getCreateDay());
+        h.setCreateTime(testMysqlTable.getCreateTime());
+        h.setGoodEvent(testMysqlTable.getGoodEvent());
+        h.setJavaEnable(testMysqlTable.getJavaEnable());
+        h.setTitle(testMysqlTable.getTitle());
+        h.setWatchID(testMysqlTable.getWatchID());
+        h.setUserAgentMajor(testMysqlTable.getUserAgentMajor());
+        h.setTestUserDefinedColumn(testMysqlTable.getTestUserDefinedColumn());
+        return h;
     }
 
     @Benchmark
-    public void insertByRowSql(Blackhole blackhole) throws Exception {
-        clickHouseJdbcConfig.threadLocalStatement().executeQuery(sql);
+    public void insertByMysqlJPA(Blackhole blackhole) throws Exception {
+        testMysqlTableDao.save(getInsertTestMysqlTable());
     }
+
+    @Benchmark
+    public void insertByClickHouseJPA(Blackhole blackhole) {
+        testCreateTableDao.create(testCreateTable);
+    }
+
+//    @Benchmark
+//    public void insertByRowSql(Blackhole blackhole) throws Exception {
+//        clickHouseJdbcConfig.threadLocalStatement().executeQuery(sql);
+//    }
 
     public static void main(String[] args) throws Exception {
         Options options = new OptionsBuilder()

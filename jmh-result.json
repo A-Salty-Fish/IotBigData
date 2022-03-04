@@ -1,13 +1,13 @@
 [
     {
         "jmhVersion" : "1.33",
-        "benchmark" : "asalty.fish.iotbigdata.benchmark.InsertBenchMark2.insertByProxy",
+        "benchmark" : "asalty.fish.iotbigdata.benchmark.InsertBenchMark2.insertByClickHouseJPA",
         "mode" : "thrpt",
         "threads" : 12,
         "forks" : 1,
         "jvm" : "C:\\Users\\13090\\.jdks\\corretto-1.8.0_302\\jre\\bin\\java.exe",
         "jvmArgs" : [
-            "-javaagent:D:\\Jetbrains\\apps\\IDEA-U\\ch-0\\213.5744.223\\lib\\idea_rt.jar=49825:D:\\Jetbrains\\apps\\IDEA-U\\ch-0\\213.5744.223\\bin",
+            "-javaagent:D:\\Jetbrains\\apps\\IDEA-U\\ch-0\\213.5744.223\\lib\\idea_rt.jar=55328:D:\\Jetbrains\\apps\\IDEA-U\\ch-0\\213.5744.223\\bin",
             "-Dfile.encoding=UTF-8"
         ],
         "jdkVersion" : "1.8.0_302",
@@ -20,28 +20,28 @@
         "measurementTime" : "5 s",
         "measurementBatchSize" : 1,
         "primaryMetric" : {
-            "score" : 931.9499581842258,
+            "score" : 974.5251002225319,
             "scoreError" : "NaN",
             "scoreConfidence" : [
                 "NaN",
                 "NaN"
             ],
             "scorePercentiles" : {
-                "0.0" : 931.9499581842258,
-                "50.0" : 931.9499581842258,
-                "90.0" : 931.9499581842258,
-                "95.0" : 931.9499581842258,
-                "99.0" : 931.9499581842258,
-                "99.9" : 931.9499581842258,
-                "99.99" : 931.9499581842258,
-                "99.999" : 931.9499581842258,
-                "99.9999" : 931.9499581842258,
-                "100.0" : 931.9499581842258
+                "0.0" : 974.5251002225319,
+                "50.0" : 974.5251002225319,
+                "90.0" : 974.5251002225319,
+                "95.0" : 974.5251002225319,
+                "99.0" : 974.5251002225319,
+                "99.9" : 974.5251002225319,
+                "99.99" : 974.5251002225319,
+                "99.999" : 974.5251002225319,
+                "99.9999" : 974.5251002225319,
+                "100.0" : 974.5251002225319
             },
             "scoreUnit" : "ops/s",
             "rawData" : [
                 [
-                    931.9499581842258
+                    974.5251002225319
                 ]
             ]
         },
@@ -50,13 +50,13 @@
     },
     {
         "jmhVersion" : "1.33",
-        "benchmark" : "asalty.fish.iotbigdata.benchmark.InsertBenchMark2.insertByRowSql",
+        "benchmark" : "asalty.fish.iotbigdata.benchmark.InsertBenchMark2.insertByMysqlJPA",
         "mode" : "thrpt",
         "threads" : 12,
         "forks" : 1,
         "jvm" : "C:\\Users\\13090\\.jdks\\corretto-1.8.0_302\\jre\\bin\\java.exe",
         "jvmArgs" : [
-            "-javaagent:D:\\Jetbrains\\apps\\IDEA-U\\ch-0\\213.5744.223\\lib\\idea_rt.jar=49825:D:\\Jetbrains\\apps\\IDEA-U\\ch-0\\213.5744.223\\bin",
+            "-javaagent:D:\\Jetbrains\\apps\\IDEA-U\\ch-0\\213.5744.223\\lib\\idea_rt.jar=55328:D:\\Jetbrains\\apps\\IDEA-U\\ch-0\\213.5744.223\\bin",
             "-Dfile.encoding=UTF-8"
         ],
         "jdkVersion" : "1.8.0_302",
@@ -69,28 +69,28 @@
         "measurementTime" : "5 s",
         "measurementBatchSize" : 1,
         "primaryMetric" : {
-            "score" : 1066.5005713357468,
+            "score" : 1250.6202033941418,
             "scoreError" : "NaN",
             "scoreConfidence" : [
                 "NaN",
                 "NaN"
             ],
             "scorePercentiles" : {
-                "0.0" : 1066.5005713357468,
-                "50.0" : 1066.5005713357468,
-                "90.0" : 1066.5005713357468,
-                "95.0" : 1066.5005713357468,
-                "99.0" : 1066.5005713357468,
-                "99.9" : 1066.5005713357468,
-                "99.99" : 1066.5005713357468,
-                "99.999" : 1066.5005713357468,
-                "99.9999" : 1066.5005713357468,
-                "100.0" : 1066.5005713357468
+                "0.0" : 1250.6202033941418,
+                "50.0" : 1250.6202033941418,
+                "90.0" : 1250.6202033941418,
+                "95.0" : 1250.6202033941418,
+                "99.0" : 1250.6202033941418,
+                "99.9" : 1250.6202033941418,
+                "99.99" : 1250.6202033941418,
+                "99.999" : 1250.6202033941418,
+                "99.9999" : 1250.6202033941418,
+                "100.0" : 1250.6202033941418
             },
             "scoreUnit" : "ops/s",
             "rawData" : [
                 [
-                    1066.5005713357468
+                    1250.6202033941418
                 ]
             ]
         },
