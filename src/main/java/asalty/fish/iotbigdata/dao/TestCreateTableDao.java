@@ -29,4 +29,9 @@ public class TestCreateTableDao {
     public Double avgWatchID() {
         return null;
     }
+
+    public void batchCreate(List<TestCreateTable> testCreateTableList) {
+        return;
+    }
+
 }

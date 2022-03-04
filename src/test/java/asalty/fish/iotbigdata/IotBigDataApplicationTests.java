@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
@@ -123,5 +125,14 @@ class IotBigDataApplicationTests {
             }).start();
         }
         latch.await();
+    }
+
+    @Test
+    public void testBatchCreateTestTable() throws Exception {
+        List<TestCreateTable> list = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            list.add(getTestTimeEntity());
+        }
+        testCreateTableDao.batchCreate(list);
     }
 }
