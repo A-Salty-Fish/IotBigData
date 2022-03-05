@@ -56,3 +56,6 @@ spring:
     bootstrap-servers: 127.0.0.1:9092
     producer:
       acks: 0
+google:
+  s2:
+    level: 20
