@@ -72,4 +72,20 @@ public class geoHashTest {
             System.out.println(cellId.toLatLng().lat().degrees());
         }
     }
+
+    @Test
+    public void getCellIdBit() {
+        for (int i = 1; i <= 30; i++) {
+            System.out.println("level " + i + ":");
+            S2CellId cellId1 = S2CellId.fromLatLng(S2LatLng.fromDegrees(30.538655,114.368005)).parent(i);
+            S2CellId cellId2 = S2CellId.fromLatLng(S2LatLng.fromDegrees(30.538636, 114.368067)).parent(i);
+            System.out.println(Long.toBinaryString(cellId1.id()));
+            System.out.println(Long.toBinaryString(cellId2.id()));
+            if (!Long.toBinaryString(cellId1.id()).equals(Long.toBinaryString(cellId2.id()))) {
+                System.out.println("not same");
+                System.out.println(Long.toBinaryString(cellId2.id() ^ cellId1.id()));
+            }
+            System.out.println();
+        }
+    }
 }

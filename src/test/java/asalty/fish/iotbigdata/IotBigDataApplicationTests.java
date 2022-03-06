@@ -135,4 +135,14 @@ class IotBigDataApplicationTests {
         }
         testCreateTableDao.batchCreate(list);
     }
+
+    @Test
+    public void getMaxByStartsWith() {
+        System.out.println(testCreateTableDao.maxWatchIDByStartsWithGoodEvent("goodEvent5"));
+    }
+
+    @Test
+    public void testNativeFunction() throws Exception {
+        System.out.println(testCreateTableDao.maxWatchIDByBit(705236002L, 20L));
+    }
 }

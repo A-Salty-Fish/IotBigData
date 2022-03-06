@@ -1,5 +1,6 @@
 package asalty.fish.iotbigdata.dao;
 
+import asalty.fish.clickhousejpa.annotation.ClickHouseNativeQuery;
 import asalty.fish.clickhousejpa.annotation.ClickHouseRepository;
 import asalty.fish.iotbigdata.entity.TestCreateTable;
 
@@ -34,4 +35,12 @@ public class TestCreateTableDao {
         return;
     }
 
+    public Long maxWatchIDByStartsWithGoodEvent(String GoodEvent) {
+        return null;
+    }
+
+    @ClickHouseNativeQuery("SELECT max(WatchID) from test_create_table where bitShiftRight(bitXor(WatchID, ?), ?) = 0;")
+    public Long maxWatchIDByBit(Long WatchID, Long bit) {
+        return null;
+    }
 }
