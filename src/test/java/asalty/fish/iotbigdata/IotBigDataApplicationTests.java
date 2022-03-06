@@ -185,4 +185,10 @@ class IotBigDataApplicationTests {
         }
         latch.await();
     }
+
+    @Test
+    public void testAvgBetween() {
+//        System.out.println(testMysqlTableDao.avgWatchIDBetweenLeftAndRight(1, 10000000));
+//        System.out.println(testCreateTableDao.avgWatchIDBetweenLeftAndRight(1, 10000000));
+    }
 }

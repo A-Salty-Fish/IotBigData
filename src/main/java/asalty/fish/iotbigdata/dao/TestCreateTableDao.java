@@ -43,4 +43,9 @@ public class TestCreateTableDao {
     public Long maxWatchIDByBit(Long WatchID, Long bit) {
         return null;
     }
+
+    @ClickHouseNativeQuery("SELECT avg(WatchID) from test_create_table where UserAgentMajor between ? and ?")
+    public Long avgWatchIDBetweenLeftAndRight(Integer left, Integer right) {
+        return null;
+    }
 }

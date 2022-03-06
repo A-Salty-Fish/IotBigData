@@ -18,4 +18,7 @@ public interface TestMysqlTableDao extends JpaRepository<TestMysqlTable, Long> {
 
     @Query(value = "select max(watchid) from test_mysql_table where ((watchid ^ :watchId) >> :bit) = 0", nativeQuery = true)
     Long maxWatchIDByBit(@Param("watchId") Long watchID, @Param("bit") Long bit);
+
+    @Query(value = "select avg(watchid) from test_mysql_table where user_agent_major between :left and :right", nativeQuery = true)
+    Long avgWatchIDBetweenLeftAndRight(@Param("left") Integer left, @Param("right") Integer right);
 }
