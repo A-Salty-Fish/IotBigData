@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 @SpringBootTest
 class IotBigDataApplicationTests {
@@ -143,6 +145,44 @@ class IotBigDataApplicationTests {
 
     @Test
     public void testNativeFunction() throws Exception {
-        System.out.println(testCreateTableDao.maxWatchIDByBit(705236002L, 20L));
+//        System.out.println(testCreateTableDao.maxWatchIDByBit(705236002L, 20L));
+        System.out.println(testMysqlTableDao.maxWatchIDByBit(173984299L, 20L));
+    }
+
+    public List<TestMysqlTable> getInsertTestMysqlTables(int size) {
+        List<TestMysqlTable> testMysqlTables = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            TestMysqlTable h = new TestMysqlTable();
+            h.setCreateDay(testMysqlTable.getCreateDay());
+            h.setCreateTime(testMysqlTable.getCreateTime());
+            h.setGoodEvent(testMysqlTable.getGoodEvent());
+            h.setJavaEnable(testMysqlTable.getJavaEnable());
+            h.setTitle(testMysqlTable.getTitle());
+            h.setWatchID(testMysqlTable.getWatchID());
+            h.setUserAgentMajor(testMysqlTable.getUserAgentMajor());
+            h.setTestUserDefinedColumn(testMysqlTable.getTestUserDefinedColumn());
+            testMysqlTables.add(h);
+        }
+        return testMysqlTables;
+    }
+
+    @Test
+    public void testNativeFunction2() throws Exception {
+        int remain = 10000000 - 646393;
+        AtomicInteger count = new AtomicInteger(remain / 100);
+        CountDownLatch latch = new CountDownLatch(12);
+        for (int i = 0; i < 12;i++) {
+            new Thread(() -> {
+                try {
+                    while (count.getAndDecrement() > 0) {
+                        testMysqlTableDao.saveAll(getInsertTestMysqlTables(100));
+                    }
+                    latch.countDown();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }, "Thread " + i).start();
+        }
+        latch.await();
     }
 }
