@@ -1,8 +1,10 @@
 package asalty.fish.iotbigdata;
 
 import asalty.fish.iotbigdata.dao.TestCreateTableDao;
+import asalty.fish.iotbigdata.dao.TestESTableDao;
 import asalty.fish.iotbigdata.dao.TestMysqlTableDao;
 import asalty.fish.iotbigdata.entity.TestCreateTable;
+import asalty.fish.iotbigdata.entity.TestESTable;
 import asalty.fish.iotbigdata.entity.TestMysqlTable;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -190,5 +193,28 @@ class IotBigDataApplicationTests {
     public void testAvgBetween() {
 //        System.out.println(testMysqlTableDao.avgWatchIDBetweenLeftAndRight(1, 10000000));
 //        System.out.println(testCreateTableDao.avgWatchIDBetweenLeftAndRight(1, 10000000));
+    }
+
+    @Resource
+    TestESTableDao testESTableDao;
+
+    public TestESTable getTestESTable() {
+        TestESTable h = new TestESTable();
+        h.setCreateDay(testMysqlTable.getCreateDay().toEpochDay());
+        h.setCreateTime(testMysqlTable.getCreateTime().toEpochSecond(ZoneOffset.UTC));
+        h.setGoodEvent(testMysqlTable.getGoodEvent());
+        h.setJavaEnable(testMysqlTable.getJavaEnable());
+        h.setTitle(testMysqlTable.getTitle());
+        h.setWatchID(testMysqlTable.getWatchID());
+        h.setUserAgentMajor(testMysqlTable.getUserAgentMajor());
+        h.setTestUserDefinedColumn(testMysqlTable.getTestUserDefinedColumn());
+        return h;
+    }
+
+    @Test
+    public void testSave() {
+        testESTableDao.deleteAll();
+        testESTableDao.save(getTestESTable());
+        System.out.println(new Gson().toJson(testESTableDao.findAll()));
     }
 }
