@@ -88,4 +88,6 @@ public class geoHashTest {
             System.out.println();
         }
     }
+
+
 }
