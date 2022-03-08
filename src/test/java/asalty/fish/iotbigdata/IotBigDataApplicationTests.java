@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
@@ -213,8 +214,8 @@ class IotBigDataApplicationTests {
 
     @Test
     public void testSave() {
-        testESTableDao.deleteAll();
-        testESTableDao.save(getTestESTable());
+//        testESTableDao.deleteAll();
+        testESTableDao.saveAll(Arrays.asList(getTestESTable()));
         System.out.println(new Gson().toJson(testESTableDao.findAll()));
     }
 }
