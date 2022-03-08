@@ -9,8 +9,10 @@ import asalty.fish.iotbigdata.entity.TestMysqlTable;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -217,5 +219,18 @@ class IotBigDataApplicationTests {
 //        testESTableDao.deleteAll();
         testESTableDao.saveAll(Arrays.asList(getTestESTable()));
         System.out.println(new Gson().toJson(testESTableDao.findAll()));
+    }
+
+    @Resource
+    RedisTemplate<String, String> redisTemplate;
+
+    ThreadLocal<Gson> gson = ThreadLocal.withInitial(Gson::new);
+
+    @Test
+    public void testRedisSave() {
+        TestESTable h = getTestESTable();
+        redisTemplate.opsForValue().set("test", gson.get().toJson(h));
+        TestESTable x = gson.get().fromJson(redisTemplate.opsForValue().get("test"), TestESTable.class);
+        System.out.println(gson.get().toJson(x));
     }
 }

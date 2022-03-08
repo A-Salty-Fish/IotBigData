@@ -9,13 +9,13 @@ spring:
       uris: http://127.0.0.1:9200
   redis:
     host: 127.0.0.1
-    port: 6379
+    port: 16379
     password:
     timeout: 1000
     database: 0
     lettuce:
       pool:
-        min-idle: 1
+        min-idle: 5
         max-idle: 10
         max-active: 10
         max-wait: 1000
