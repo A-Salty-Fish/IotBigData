@@ -65,3 +65,14 @@ cache:
   caffeine:
     expires: 3600
     maximumSize: 10000
+job:
+  executor:
+    corePoolSize: 6
+    maxPoolSize: 12
+    keepAliveSeconds: 6000
+    queueCapacity: 1000
+    workerExecutorPrefix: ASaltyFish-WorkerExecutor-
+    bossExecutorPrefix: ASaltyFish-BossExecutor-
+  timeWheel:
+    tick: 60
+    size: 100
