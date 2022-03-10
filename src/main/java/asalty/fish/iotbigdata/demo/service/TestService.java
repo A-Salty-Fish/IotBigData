@@ -1,4 +1,4 @@
-package asalty.fish.iotbigdata.service;
+package asalty.fish.iotbigdata.demo.service;
 
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package asalty.fish.iotbigdata.entity;
+package asalty.fish.iotbigdata.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

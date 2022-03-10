@@ -1,6 +1,6 @@
-package asalty.fish.iotbigdata.dao;
+package asalty.fish.iotbigdata.demo.dao;
 
-import asalty.fish.iotbigdata.entity.TestMysqlTable;
+import asalty.fish.iotbigdata.demo.entity.TestMysqlTable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

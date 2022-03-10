@@ -1,7 +1,7 @@
 package asalty.fish.iotbigdata.benchmark;
 
 import asalty.fish.iotbigdata.IotBigDataApplication;
-import asalty.fish.iotbigdata.entity.TestCreateTable;
+import asalty.fish.iotbigdata.demo.entity.TestCreateTable;
 import com.google.gson.Gson;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.results.format.ResultFormatType;

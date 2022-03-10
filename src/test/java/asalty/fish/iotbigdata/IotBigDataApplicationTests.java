@@ -1,18 +1,17 @@
 package asalty.fish.iotbigdata;
 
-import asalty.fish.iotbigdata.dao.TestCreateTableDao;
-import asalty.fish.iotbigdata.dao.TestESTableDao;
-import asalty.fish.iotbigdata.dao.TestMysqlTableDao;
-import asalty.fish.iotbigdata.entity.TestCreateTable;
-import asalty.fish.iotbigdata.entity.TestESTable;
-import asalty.fish.iotbigdata.entity.TestMysqlTable;
+import asalty.fish.iotbigdata.demo.dao.TestCreateTableDao;
+import asalty.fish.iotbigdata.demo.dao.TestESTableDao;
+import asalty.fish.iotbigdata.demo.dao.TestMysqlTableDao;
+import asalty.fish.iotbigdata.demo.entity.TestCreateTable;
+import asalty.fish.iotbigdata.demo.entity.TestESTable;
+import asalty.fish.iotbigdata.demo.entity.TestMysqlTable;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -22,7 +21,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.IntStream;
 
 @SpringBootTest
 class IotBigDataApplicationTests {

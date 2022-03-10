@@ -1,14 +1,12 @@
 package asalty.fish.iotbigdata.benchmark;
 
-import asalty.fish.clickhousejpa.CRUDStatementHandler.handler.InsertStatementHandler;
-import asalty.fish.clickhousejpa.jdbc.ClickHouseJdbcConfig;
 import asalty.fish.iotbigdata.IotBigDataApplication;
-import asalty.fish.iotbigdata.dao.TestCreateTableDao;
-import asalty.fish.iotbigdata.dao.TestESTableDao;
-import asalty.fish.iotbigdata.dao.TestMysqlTableDao;
-import asalty.fish.iotbigdata.entity.TestCreateTable;
-import asalty.fish.iotbigdata.entity.TestESTable;
-import asalty.fish.iotbigdata.entity.TestMysqlTable;
+import asalty.fish.iotbigdata.demo.dao.TestCreateTableDao;
+import asalty.fish.iotbigdata.demo.dao.TestESTableDao;
+import asalty.fish.iotbigdata.demo.dao.TestMysqlTableDao;
+import asalty.fish.iotbigdata.demo.entity.TestCreateTable;
+import asalty.fish.iotbigdata.demo.entity.TestESTable;
+import asalty.fish.iotbigdata.demo.entity.TestMysqlTable;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;

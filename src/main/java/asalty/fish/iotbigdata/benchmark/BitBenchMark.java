@@ -1,9 +1,8 @@
 package asalty.fish.iotbigdata.benchmark;
 
 import asalty.fish.iotbigdata.IotBigDataApplication;
-import asalty.fish.iotbigdata.dao.TestCreateTableDao;
-import asalty.fish.iotbigdata.dao.TestMysqlTableDao;
-import asalty.fish.iotbigdata.entity.TestCreateTable;
+import asalty.fish.iotbigdata.demo.dao.TestCreateTableDao;
+import asalty.fish.iotbigdata.demo.dao.TestMysqlTableDao;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.results.format.ResultFormatType;
@@ -14,7 +13,6 @@ import org.openjdk.jmh.runner.options.TimeValue;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 

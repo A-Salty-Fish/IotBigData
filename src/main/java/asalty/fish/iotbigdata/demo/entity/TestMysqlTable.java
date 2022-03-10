@@ -1,4 +1,4 @@
-package asalty.fish.iotbigdata.entity;
+package asalty.fish.iotbigdata.demo.entity;
 
 import lombok.Data;
 
