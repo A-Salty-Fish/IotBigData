@@ -64,3 +64,4 @@ cache:
     expires: 3600
   caffeine:
     expires: 3600
+    maximumSize: 10000
