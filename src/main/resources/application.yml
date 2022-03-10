@@ -59,3 +59,8 @@ spring:
 google:
   s2:
     level: 20
+cache:
+  redis:
+    expires: 3600
+  caffeine:
+    expires: 3600
