@@ -43,9 +43,11 @@ public class Timer implements DisposableBean {
     @Resource
     private ThreadPoolTaskExecutor bossThreadPool;
 
-    @Value("${job.timeWheel.tick: 60}")
+    // 时间轮单位 ms
+    @Value("${job.timeWheel.tick: 100}")
     long tick;
 
+    // 时间轮大小
     @Value("${job.timeWheel.size: 60}")
     int wheelSize;
     /**

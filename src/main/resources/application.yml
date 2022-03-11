@@ -74,5 +74,5 @@ job:
     workerExecutorPrefix: ASaltyFish-WorkerExecutor-
     bossExecutorPrefix: ASaltyFish-BossExecutor-
   timeWheel:
-    tick: 60
+    tick: 1000
     size: 100
