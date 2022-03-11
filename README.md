@@ -23,7 +23,7 @@ Undergraduate Graduation Project
 - [ ] HyperLogLog (https://github.com/prasanthj/hyperloglog)
 
 ### Job Scheduler Module
-- [ ] Time Wheel (https://github.com/tk1949/timewheel4j)
+1. Time Wheel (https://github.com/tk1949/timewheel4j)
 
 ### Benchmark Module
 1. JMH (https://github.com/openjdk/jmh)
