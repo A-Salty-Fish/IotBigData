@@ -10,7 +10,7 @@ Undergraduate Graduation Project
 ### Data access module
 1. clickhouse-jpa (https://github.com/A-Salty-Fish/clickhouse-jpa)
 2. spring data elasticsearch jpa (https://github.com/spring-projects/spring-data-elasticsearch)
-- [ ] MapDB (https://github.com/jankotek/mapdb)
+3. MapDB (https://github.com/jankotek/mapdb)
 
 ### Codec Module
 1. GeoHash （ use Google S2） (https://github.com/google/s2-geometry-library-java)
