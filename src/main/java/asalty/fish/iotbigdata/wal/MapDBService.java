@@ -45,12 +45,11 @@ public class MapDBService {
 
     DB db;
 
-    ConcurrentNavigableMap<String, String> dbMap;
+    ConcurrentMap<String, String> dbMap;
 
     ConcurrentHashMap<String, AtomicLong> dbMapCount;
 
     public void put(Object o) {
-        String value = dbMap.get(o.getClass().getName());
         dbMap.computeIfPresent(o.getClass().getName(), (k, v) -> v.equals("") ? ThreadLocalGson.threadLocalGson.get().toJson(o) : v + "?" + ThreadLocalGson.threadLocalGson.get().toJson(o));
         dbMap.computeIfAbsent(o.getClass().getName(), k -> ThreadLocalGson.threadLocalGson.get().toJson(o));
         db.commit();
@@ -106,7 +105,7 @@ public class MapDBService {
                         .transactionEnable()
                         .closeOnJvmShutdown()
                         .make();
-                dbMap = db.treeMap("wal", Serializer.STRING, Serializer.STRING)
+                dbMap = db.hashMap("wal", Serializer.STRING, Serializer.STRING)
                         .createOrOpen();
                 log.info("MapDBService init success");
                 timer.addTask(new TimerTask(flushIntervalMs, this::flushAll));
