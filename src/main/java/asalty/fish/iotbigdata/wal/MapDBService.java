@@ -45,34 +45,35 @@ public class MapDBService {
 
     DB db;
 
-    ConcurrentMap<String, String> dbMap;
+    ConcurrentMap<Long, String> dbMap;
+
+    AtomicLong idGenerator;
 
     ConcurrentHashMap<String, AtomicLong> dbMapCount;
 
     public void put(Object o) {
-        dbMap.computeIfPresent(o.getClass().getName(), (k, v) -> v.equals("") ? ThreadLocalGson.threadLocalGson.get().toJson(o) : v + "?" + ThreadLocalGson.threadLocalGson.get().toJson(o));
-        dbMap.computeIfAbsent(o.getClass().getName(), k -> ThreadLocalGson.threadLocalGson.get().toJson(o));
-        db.commit();
+        dbMap.put(idGenerator.incrementAndGet(), ThreadLocalGson.threadLocalGson.get().toJson(o));
+//        db.commit();
     }
 
     public String get(Class<?> clazz) {
         return dbMap.get(clazz.getName());
     }
 
-    public <T> void flushAndRemove(Class<T> clazz) {
-        String value = dbMap.get(clazz.getName());
-        if (value != null){
-            List<T> list = getAll(clazz, value);
-            try {
-                flush(clazz, list);
-                dbMap.computeIfPresent(clazz.getName(), (k, v) -> v.substring(value.length()));
-                db.commit();
-            } catch (Exception e) {
-                log.error("flushAndRemove error");
-                e.printStackTrace();
-            }
-        }
-    }
+//    public <T> void flushAndRemove(Class<T> clazz) {
+//        String value = dbMap.get(clazz.getName());
+//        if (value != null){
+//            List<T> list = getAll(clazz, value);
+//            try {
+//                flush(clazz, list);
+//                dbMap.computeIfPresent(clazz.getName(), (k, v) -> v.substring(value.length()));
+//                db.commit();
+//            } catch (Exception e) {
+//                log.error("flushAndRemove error");
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     public <T> void flush(Class<T> clazz, List<T> list) {
         // todo
@@ -101,12 +102,13 @@ public class MapDBService {
         if (walEnabled){
             try {
                 db = DBMaker
-                        .fileDB("wal.db")
+                        .memoryDirectDB()
                         .transactionEnable()
                         .closeOnJvmShutdown()
                         .make();
-                dbMap = db.hashMap("wal", Serializer.STRING, Serializer.STRING)
+                dbMap = db.hashMap("wal", Serializer.LONG, Serializer.STRING)
                         .createOrOpen();
+                idGenerator = new AtomicLong(dbMap.size());
                 log.info("MapDBService init success");
                 timer.addTask(new TimerTask(flushIntervalMs, this::flushAll));
                 log.info("Flush Task Init");
