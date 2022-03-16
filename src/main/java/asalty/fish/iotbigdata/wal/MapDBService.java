@@ -99,22 +99,22 @@ public class MapDBService {
 
     @PostConstruct
     public void init(){
-        if (walEnabled){
-            try {
-                db = DBMaker
-                        .memoryDirectDB()
-                        .transactionEnable()
-                        .closeOnJvmShutdown()
-                        .make();
-                dbMap = db.hashMap("wal", Serializer.LONG, Serializer.STRING)
-                        .createOrOpen();
-                idGenerator = new AtomicLong(dbMap.size());
-                log.info("MapDBService init success");
-                timer.addTask(new TimerTask(flushIntervalMs, this::flushAll));
-                log.info("Flush Task Init");
-            } catch (Exception e) {
-                log.error("init wal error", e);
-            }
-        }
+//        if (walEnabled){
+//            try {
+//                db = DBMaker
+//                        .memoryDirectDB()
+//                        .transactionEnable()
+//                        .closeOnJvmShutdown()
+//                        .make();
+//                dbMap = db.hashMap("wal", Serializer.LONG, Serializer.STRING)
+//                        .createOrOpen();
+//                idGenerator = new AtomicLong(dbMap.size());
+//                log.info("MapDBService init success");
+//                timer.addTask(new TimerTask(flushIntervalMs, this::flushAll));
+//                log.info("Flush Task Init");
+//            } catch (Exception e) {
+//                log.error("init wal error", e);
+//            }
+//        }
     }
 }
