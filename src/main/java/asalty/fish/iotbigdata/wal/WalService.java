@@ -1,6 +1,8 @@
 package asalty.fish.iotbigdata.wal;
 
 import asalty.fish.clickhousejpa.annotation.ClickHouseRepository;
+import asalty.fish.clickhousejpa.exception.IllegalSqlArguementException;
+import asalty.fish.clickhousejpa.exception.TypeNotSupportException;
 import asalty.fish.iotbigdata.job.Timer;
 import asalty.fish.iotbigdata.job.TimerTask;
 import asalty.fish.iotbigdata.util.ClassScanUtil;
@@ -55,33 +57,60 @@ public class WalService {
     HashMap<Class<?>, Object> daoMap;
 
     public void flush(Class<?> clazz, ConcurrentLinkedQueue<Object> queue) {
+        if (queue.size() == 0) {
+            return;
+        }
         Method batchCreateMethod = batchCreateMethodMap.get(clazz);
         if (batchCreateMethod != null) {
             Object dao = daoMap.get(clazz);
-            if (queue.size() > flushSize) {
-                int size = queue.size();
+            int size = queue.size();
+            if (size > flushSize) {
                 for (int i = 0; i < size / flushSize; i++) {
-                    List<Object> list = new ArrayList<>(flushSize);
-                    for (int j = 0; j < flushSize; j++) {
-                        list.add(queue.poll());
-                    }
-                    workerThreadPool.submit(() -> {
-                        try {
-                            batchCreateMethod.invoke(dao, list);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
+                    batchInsert(dao, batchCreateMethod, queue, flushSize);
                 }
+            }
+            size = size % flushSize;
+            if (size > 0) {
+                batchInsert(dao, batchCreateMethod, queue, size);
             }
         }
     }
 
+    public void batchInsert(Object dao, Method batchCreateMethod, ConcurrentLinkedQueue<Object> queue, int size) {
+        List<Object> list = new ArrayList<>(flushSize);
+        for (int j = 0; j < flushSize; j++) {
+            list.add(queue.poll());
+        }
+        workerThreadPool.submit(() -> {
+            try {
+                batchCreateMethod.invoke(dao, list);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     public void flushAll() {
         for (Class<?> clazz : batchCreateMap.keySet()) {
-            workerThreadPool.submit(() -> flush(clazz, batchCreateMap.get(clazz)));
+            flush(clazz, batchCreateMap.get(clazz));
         }
         timer.addTask(new TimerTask(flushIntervalMs, this::flushAll));
+    }
+
+    public void insert(Object object) throws TypeNotSupportException {
+        if (!daoMap.containsKey(object.getClass())) {
+            throw new TypeNotSupportException("dao not support the class: " + object.getClass());
+        }
+        batchCreateMap.get(object.getClass()).add(object);
+    }
+
+    public void insert(List<?> list) throws TypeNotSupportException {
+        if (list.size() != 0) {
+            if (!daoMap.containsKey(list.get(0).getClass())) {
+                throw new TypeNotSupportException("dao not support the class: " + list.get(0).getClass());
+            }
+            batchCreateMap.get(list.get(0).getClass()).addAll(list);
+        }
     }
 
     @Autowired
@@ -109,6 +138,7 @@ public class WalService {
                     e.printStackTrace();
                 }
             }
+            timer.addTask(new TimerTask(flushIntervalMs, this::flushAll));
         }
     }
 }
