@@ -15,17 +15,4 @@ import java.util.List;
 @SpringBootTest
 public class WalServiceTest {
 
-    @Resource
-    WalService mapDBService;
-
-    @Test
-    public void testDB() throws Exception {
-        for (int i = 0; i < 100; i++) {
-            mapDBService.put("test" + i);
-        }
-        List<String> list = mapDBService.getAll(String.class, mapDBService.get(String.class));
-        for (String s : list) {
-            System.out.println(s);
-        }
-    }
 }

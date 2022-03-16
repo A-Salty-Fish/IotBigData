@@ -30,8 +30,6 @@ public class WalBenchMark {
 
     private ConfigurableApplicationContext context;
 
-    private WalService mapDBService;
-
     Map<String, String> map;
 
     Timer timer;
@@ -39,7 +37,6 @@ public class WalBenchMark {
     @Setup(Level.Trial)
     public void init() throws Exception {
         context = SpringApplication.run(IotBigDataApplication.class);
-        mapDBService = context.getBean(WalService.class);
         timer = context.getBean(Timer.class);
         map = new ConcurrentHashMap<>();
     }
@@ -51,11 +48,6 @@ public class WalBenchMark {
     }
 
     ThreadLocalRandom random = ThreadLocalRandom.current();
-
-    @Benchmark
-    public void testMapDB() {
-        mapDBService.put("test" + random.nextInt(1000));
-    }
 
     @Benchmark
     public void testHashMap() {map.put("test" + random.nextInt(1000), "test");}

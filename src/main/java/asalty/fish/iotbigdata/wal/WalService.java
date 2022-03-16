@@ -1,17 +1,24 @@
 package asalty.fish.iotbigdata.wal;
 
+import asalty.fish.clickhousejpa.annotation.ClickHouseRepository;
 import asalty.fish.iotbigdata.job.Timer;
 import asalty.fish.iotbigdata.job.TimerTask;
+import asalty.fish.iotbigdata.util.ClassScanUtil;
 import asalty.fish.iotbigdata.util.ThreadLocalGson;
 import lombok.extern.slf4j.Slf4j;
 import org.mapdb.DB;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -38,37 +45,13 @@ public class WalService {
     @Value("${wal.flushSize: 200}")
     private int flushSize;
 
-    DB db;
-
     ConcurrentMap<Long, String> dbMap;
 
+    HashMap<Class<?>, Method> batchCreateMethodMap;
+
+    ConcurrentHashMap<Class<?>, Vector<Object>> batchCreateMap;
+
     AtomicLong idGenerator;
-
-    ConcurrentHashMap<String, AtomicLong> dbMapCount;
-
-    public void put(Object o) {
-        dbMap.put(idGenerator.incrementAndGet(), ThreadLocalGson.threadLocalGson.get().toJson(o));
-//        db.commit();
-    }
-
-    public String get(Class<?> clazz) {
-        return dbMap.get(clazz.getName());
-    }
-
-//    public <T> void flushAndRemove(Class<T> clazz) {
-//        String value = dbMap.get(clazz.getName());
-//        if (value != null){
-//            List<T> list = getAll(clazz, value);
-//            try {
-//                flush(clazz, list);
-//                dbMap.computeIfPresent(clazz.getName(), (k, v) -> v.substring(value.length()));
-//                db.commit();
-//            } catch (Exception e) {
-//                log.error("flushAndRemove error");
-//                e.printStackTrace();
-//            }
-//        }
-//    }
 
     public <T> void flush(Class<T> clazz, List<T> list) {
         // todo
@@ -80,36 +63,41 @@ public class WalService {
     }
 
     public <T> List<T> getAll(Class<T> clazz, String value) {
-        if (value == null){
+        if (value == null) {
             return null;
         } else {
             String[] values = value.split("\\?");
             List<T> result = new ArrayList<>(values.length);
-            for (String v : values){
+            for (String v : values) {
                 result.add(ThreadLocalGson.threadLocalGson.get().fromJson(v, clazz));
             }
             return result;
         }
     }
 
+    @Autowired
+    private ApplicationContext context;
+
     @PostConstruct
-    public void init(){
-//        if (walEnabled){
-//            try {
-//                db = DBMaker
-//                        .memoryDirectDB()
-//                        .transactionEnable()
-//                        .closeOnJvmShutdown()
-//                        .make();
-//                dbMap = db.hashMap("wal", Serializer.LONG, Serializer.STRING)
-//                        .createOrOpen();
-//                idGenerator = new AtomicLong(dbMap.size());
-//                log.info("MapDBService init success");
-//                timer.addTask(new TimerTask(flushIntervalMs, this::flushAll));
-//                log.info("Flush Task Init");
-//            } catch (Exception e) {
-//                log.error("init wal error", e);
-//            }
-//        }
+    public void init() {
+        if (walEnabled) {
+            // get springboot main class
+            String[] springBootAppBeanName = context.getBeanNamesForAnnotation(org.springframework.boot.autoconfigure.SpringBootApplication.class);
+            Object springbootApplication = context.getBean(springBootAppBeanName[0]);
+            // get clickhouse jpa repository
+            List<Class<?>> daos = ClassScanUtil.getClassByAnnotation(springbootApplication.getClass().getPackage().getName(), ClickHouseRepository.class);
+            batchCreateMethodMap = new HashMap<>(daos.size());
+            batchCreateMap = new ConcurrentHashMap<>(daos.size());
+            // get the batch create method and init the map
+            for (Class<?> dao : daos) {
+                ClickHouseRepository clickHouseRepository = dao.getAnnotation(ClickHouseRepository.class);
+                batchCreateMap.put(clickHouseRepository.entity(), new Vector<>());
+                try {
+                    batchCreateMethodMap.put(clickHouseRepository.entity(), dao.getMethod("batchCreate", List.class));
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
