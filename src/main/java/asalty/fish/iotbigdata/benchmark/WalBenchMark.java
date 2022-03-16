@@ -14,6 +14,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
@@ -32,6 +33,8 @@ public class WalBenchMark {
 
     Map<String, String> map;
 
+    ConcurrentLinkedQueue<String> queue;
+
     Timer timer;
 
     @Setup(Level.Trial)
@@ -39,6 +42,18 @@ public class WalBenchMark {
         context = SpringApplication.run(IotBigDataApplication.class);
         timer = context.getBean(Timer.class);
         map = new ConcurrentHashMap<>();
+        queue = new ConcurrentLinkedQueue<>();
+    }
+
+    @Benchmark
+    public void testQueueAdd() {
+        queue.offer("test" + random.nextInt(1000));
+    }
+
+    @Benchmark
+    public void testQueueRemove() {
+        queue.offer("test" + random.nextInt(1000));
+        queue.poll();
     }
 
     @TearDown

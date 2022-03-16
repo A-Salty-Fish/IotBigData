@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -49,9 +50,7 @@ public class WalService {
 
     HashMap<Class<?>, Method> batchCreateMethodMap;
 
-    ConcurrentHashMap<Class<?>, Vector<Object>> batchCreateMap;
-
-    AtomicLong idGenerator;
+    ConcurrentHashMap<Class<?>, ConcurrentLinkedQueue<Object>> batchCreateMap;
 
     public <T> void flush(Class<T> clazz, List<T> list) {
         // todo
@@ -91,7 +90,7 @@ public class WalService {
             // get the batch create method and init the map
             for (Class<?> dao : daos) {
                 ClickHouseRepository clickHouseRepository = dao.getAnnotation(ClickHouseRepository.class);
-                batchCreateMap.put(clickHouseRepository.entity(), new Vector<>());
+                batchCreateMap.put(clickHouseRepository.entity(), new ConcurrentLinkedQueue<>());
                 try {
                     batchCreateMethodMap.put(clickHouseRepository.entity(), dao.getMethod("batchCreate", List.class));
                 } catch (NoSuchMethodException e) {
