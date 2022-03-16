@@ -2,7 +2,7 @@ package asalty.fish.iotbigdata.benchmark;
 
 import asalty.fish.iotbigdata.IotBigDataApplication;
 import asalty.fish.iotbigdata.job.Timer;
-import asalty.fish.iotbigdata.wal.MapDBService;
+import asalty.fish.iotbigdata.wal.WalService;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
@@ -11,12 +11,9 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.DelayQueue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
@@ -33,7 +30,7 @@ public class WalBenchMark {
 
     private ConfigurableApplicationContext context;
 
-    private MapDBService mapDBService;
+    private WalService mapDBService;
 
     Map<String, String> map;
 
@@ -42,7 +39,7 @@ public class WalBenchMark {
     @Setup(Level.Trial)
     public void init() throws Exception {
         context = SpringApplication.run(IotBigDataApplication.class);
-        mapDBService = context.getBean(MapDBService.class);
+        mapDBService = context.getBean(WalService.class);
         timer = context.getBean(Timer.class);
         map = new ConcurrentHashMap<>();
     }

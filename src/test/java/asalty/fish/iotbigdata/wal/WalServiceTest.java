@@ -13,10 +13,10 @@ import java.util.List;
  * @date 2022/3/11 14:36
  */
 @SpringBootTest
-public class MapDBServiceTest {
+public class WalServiceTest {
 
     @Resource
-    MapDBService mapDBService;
+    WalService mapDBService;
 
     @Test
     public void testDB() throws Exception {

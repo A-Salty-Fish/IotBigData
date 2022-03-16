@@ -5,10 +5,6 @@ import asalty.fish.iotbigdata.job.TimerTask;
 import asalty.fish.iotbigdata.util.ThreadLocalGson;
 import lombok.extern.slf4j.Slf4j;
 import org.mapdb.DB;
-import org.mapdb.DBMaker;
-import org.mapdb.HTreeMap;
-import org.mapdb.Serializer;
-import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -29,7 +24,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 @Service
 @Slf4j
-public class MapDBService {
+public class WalService {
 
     @Resource
     Timer timer;

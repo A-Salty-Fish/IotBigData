@@ -3,6 +3,7 @@ package asalty.fish.iotbigdata.demo.dao;
 import asalty.fish.clickhousejpa.annotation.ClickHouseNativeQuery;
 import asalty.fish.clickhousejpa.annotation.ClickHouseRepository;
 import asalty.fish.iotbigdata.demo.entity.TestCreateTable;
+import asalty.fish.iotbigdata.proxy.InsertProxy;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class TestCreateTableDao {
         return null;
     }
 
+    @InsertProxy
     public void create(TestCreateTable testCreateTable) {
         return;
     }

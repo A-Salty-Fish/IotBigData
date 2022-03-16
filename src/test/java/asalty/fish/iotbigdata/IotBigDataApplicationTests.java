@@ -51,7 +51,7 @@ class IotBigDataApplicationTests {
     @Test
     void testCreateTable() {
 //        testCreateTableDao.create(getTestTimeEntity());
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             testCreateTableDao.create(getTestTimeEntity());
         }
     }
