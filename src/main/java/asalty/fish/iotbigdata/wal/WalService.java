@@ -61,24 +61,26 @@ public class WalService {
             return;
         }
         Method batchCreateMethod = batchCreateMethodMap.get(clazz);
-        if (batchCreateMethod != null) {
-            Object dao = daoMap.get(clazz);
-            int size = queue.size();
-            if (size > flushSize) {
-                for (int i = 0; i < size / flushSize; i++) {
-                    batchInsert(dao, batchCreateMethod, queue, flushSize);
+        synchronized (queue) {
+            if (batchCreateMethod != null) {
+                Object dao = daoMap.get(clazz);
+                int size = queue.size();
+                if (size > flushSize) {
+                    for (int i = 0; i < size / flushSize; i++) {
+                        batchInsert(dao, batchCreateMethod, queue, flushSize);
+                    }
                 }
-            }
-            size = size % flushSize;
-            if (size > 0) {
-                batchInsert(dao, batchCreateMethod, queue, size);
+                size = size % flushSize;
+                if (size > 0) {
+                    batchInsert(dao, batchCreateMethod, queue, size);
+                }
             }
         }
     }
 
     public void batchInsert(Object dao, Method batchCreateMethod, ConcurrentLinkedQueue<Object> queue, int size) {
         List<Object> list = new ArrayList<>(flushSize);
-        for (int j = 0; j < flushSize; j++) {
+        for (int j = 0; j < size; j++) {
             list.add(queue.poll());
         }
         workerThreadPool.submit(() -> {

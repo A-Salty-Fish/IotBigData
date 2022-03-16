@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author 13090
@@ -24,15 +25,22 @@ public class InsertProxyTest {
 
     @Test
     public void testSingleInsert() throws Exception {
-        testCreateTableService.create(IotBigDataApplicationTests.getTestTimeEntity());
+        for (int i = 0; i < 10000; i++) {
+            testCreateTableService.create(IotBigDataApplicationTests.getTestTimeEntity());
+        }
+        TimeUnit.SECONDS.sleep(10);
     }
 
     @Test
     public void testBatchInsert() throws Exception {
-        List<TestCreateTable> testTimeEntityList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            testTimeEntityList.add(IotBigDataApplicationTests.getTestTimeEntity());
+        for (int i = 0; i < 100; i++) {
+            List<TestCreateTable> testTimeEntityList = new ArrayList<>();
+            for (int j = 0; j < 10000; j++) {
+                testTimeEntityList.add(IotBigDataApplicationTests.getTestTimeEntity());
+            }
+            testCreateTableService.batchCreate(testTimeEntityList);
+            TimeUnit.MILLISECONDS.sleep(400);
         }
-        testCreateTableService.batchCreate(testTimeEntityList);
+        TimeUnit.SECONDS.sleep(60);
     }
 }
