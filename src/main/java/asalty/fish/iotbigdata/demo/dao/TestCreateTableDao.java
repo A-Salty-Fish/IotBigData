@@ -20,7 +20,6 @@ public class TestCreateTableDao {
         return null;
     }
 
-    @InsertProxy
     public void create(TestCreateTable testCreateTable) {
         return;
     }

@@ -23,7 +23,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @SpringBootTest
-class IotBigDataApplicationTests {
+public class IotBigDataApplicationTests {
 
     @Resource
     TestCreateTableDao testCreateTableDao;
@@ -33,7 +33,7 @@ class IotBigDataApplicationTests {
         System.out.println(new Gson().toJson(testCreateTableDao.findAllByWatchID(541755838L)));
     }
 
-    public TestCreateTable getTestTimeEntity() {
+    public static TestCreateTable getTestTimeEntity() {
         TestCreateTable h = new TestCreateTable();
         Random random = new Random();
         h.setId((long) random.nextInt(1000000000));

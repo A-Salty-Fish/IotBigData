@@ -7,6 +7,9 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * @author 13090
  * @version 1.0
@@ -25,8 +28,16 @@ public class InsertProxyAop {
 
     @Around("pointCut()")
     public Object insertProxy(ProceedingJoinPoint joinPoint) throws Throwable {
-        log.info("insertProxy");
-        return joinPoint.proceed();
+//        log.info(joinPoint.getArgs()[0].getClass().toString());
+        if (joinPoint.getArgs()[0] instanceof List) {
+            log.info("batch");
+            // handle list insert
+        } else {
+            log.info("single");
+            // handle single insert
+        }
+//        log.info("insertProxy");
+        return null;
     }
 
 }
