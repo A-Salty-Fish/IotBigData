@@ -1,11 +1,12 @@
 package asalty.fish.iotbigdata.proxy;
 
-/**
- * @author 13090
- * @version 1.0
- * @description: TODO
- * @date 2022/3/16 16:29
- */
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class ReadProxy {
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ReadProxy {
+    String value() default "";
 }
