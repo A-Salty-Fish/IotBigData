@@ -28,19 +28,16 @@ public class InsertProxyAop {
     }
 
     @Resource
-    WalService walService;
+    InsertEntityProxy insertEntityProxy;
 
     @Around("pointCut()")
     public Object insertProxy(ProceedingJoinPoint joinPoint) throws Throwable {
-//        log.info(joinPoint.getArgs()[0].getClass().toString());
         if (joinPoint.getArgs()[0] instanceof List) {
             // handle list insert
-            List<?> list = (List<?>) joinPoint.getArgs()[0];
-            walService.insert(list);
+            insertEntityProxy.handleBatchInsert((List<?>) joinPoint.getArgs()[0]);
         } else {
             // handle single insert
-            Object object = joinPoint.getArgs()[0];
-            walService.insert(object);
+            insertEntityProxy.handleSingleInsert(joinPoint.getArgs()[0]);
         }
 //        log.info("insertProxy");
         return null;
