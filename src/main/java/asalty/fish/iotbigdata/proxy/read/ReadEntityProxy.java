@@ -1,4 +1,4 @@
-package asalty.fish.iotbigdata.proxy;
+package asalty.fish.iotbigdata.proxy.read;
 
 /**
  * @author 13090

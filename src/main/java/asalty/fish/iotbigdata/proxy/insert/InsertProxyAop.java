@@ -1,4 +1,4 @@
-package asalty.fish.iotbigdata.proxy;
+package asalty.fish.iotbigdata.proxy.insert;
 
 import asalty.fish.iotbigdata.wal.WalService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import java.util.List;
 @Slf4j
 public class InsertProxyAop {
 
-    @Pointcut("@annotation(asalty.fish.iotbigdata.proxy.InsertProxy)")
+    @Pointcut("@annotation(asalty.fish.iotbigdata.proxy.insert.InsertProxy)")
     private void pointCut() {
     }
 

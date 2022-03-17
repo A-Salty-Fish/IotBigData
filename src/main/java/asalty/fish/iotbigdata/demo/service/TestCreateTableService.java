@@ -2,7 +2,7 @@ package asalty.fish.iotbigdata.demo.service;
 
 import asalty.fish.iotbigdata.demo.dao.TestCreateTableDao;
 import asalty.fish.iotbigdata.demo.entity.TestCreateTable;
-import asalty.fish.iotbigdata.proxy.InsertProxy;
+import asalty.fish.iotbigdata.proxy.insert.InsertProxy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

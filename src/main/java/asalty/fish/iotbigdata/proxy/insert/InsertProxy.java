@@ -1,4 +1,4 @@
-package asalty.fish.iotbigdata.proxy;
+package asalty.fish.iotbigdata.proxy.insert;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,6 +7,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ReadProxy {
+public @interface InsertProxy {
     String value() default "";
 }
