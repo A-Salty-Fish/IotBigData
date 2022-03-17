@@ -1,28 +1,29 @@
 package asalty.fish.iotbigdata.wal;
 
 import asalty.fish.clickhousejpa.annotation.ClickHouseRepository;
+import asalty.fish.clickhousejpa.exception.IllegalSqlArguementException;
+import asalty.fish.clickhousejpa.exception.TypeNotSupportException;
 import asalty.fish.iotbigdata.job.Timer;
 import asalty.fish.iotbigdata.job.TimerTask;
 import asalty.fish.iotbigdata.util.ClassScanUtil;
 import asalty.fish.iotbigdata.util.ThreadLocalGson;
 import lombok.extern.slf4j.Slf4j;
-import org.mapdb.DB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author 13090
@@ -37,6 +38,9 @@ public class WalService {
     @Resource
     Timer timer;
 
+    @Resource
+    ThreadPoolTaskExecutor workerThreadPool;
+
     @Value("${wal.enabled: true}")
     private boolean walEnabled;
 
@@ -46,31 +50,68 @@ public class WalService {
     @Value("${wal.flushSize: 200}")
     private int flushSize;
 
-    ConcurrentMap<Long, String> dbMap;
-
     HashMap<Class<?>, Method> batchCreateMethodMap;
 
     ConcurrentHashMap<Class<?>, ConcurrentLinkedQueue<Object>> batchCreateMap;
 
-    public <T> void flush(Class<T> clazz, List<T> list) {
-        // todo
+    HashMap<Class<?>, Object> daoMap;
+
+    public void flush(Class<?> clazz, ConcurrentLinkedQueue<Object> queue) {
+        if (queue.size() == 0) {
+            return;
+        }
+        Method batchCreateMethod = batchCreateMethodMap.get(clazz);
+        synchronized (queue) {
+            if (batchCreateMethod != null) {
+                Object dao = daoMap.get(clazz);
+                int size = queue.size();
+                if (size > flushSize) {
+                    for (int i = 0; i < size / flushSize; i++) {
+                        batchInsert(dao, batchCreateMethod, queue, flushSize);
+                    }
+                }
+                size = size % flushSize;
+                if (size > 0) {
+                    batchInsert(dao, batchCreateMethod, queue, size);
+                }
+            }
+        }
+    }
+
+    public void batchInsert(Object dao, Method batchCreateMethod, ConcurrentLinkedQueue<Object> queue, int size) {
+        List<Object> list = new ArrayList<>(flushSize);
+        for (int j = 0; j < size; j++) {
+            list.add(queue.poll());
+        }
+        workerThreadPool.submit(() -> {
+            try {
+                batchCreateMethod.invoke(dao, list);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public void flushAll() {
-        log.info("flushAll");
+        for (Class<?> clazz : batchCreateMap.keySet()) {
+            flush(clazz, batchCreateMap.get(clazz));
+        }
         timer.addTask(new TimerTask(flushIntervalMs, this::flushAll));
     }
 
-    public <T> List<T> getAll(Class<T> clazz, String value) {
-        if (value == null) {
-            return null;
-        } else {
-            String[] values = value.split("\\?");
-            List<T> result = new ArrayList<>(values.length);
-            for (String v : values) {
-                result.add(ThreadLocalGson.threadLocalGson.get().fromJson(v, clazz));
+    public void insert(Object object) throws TypeNotSupportException {
+        if (!daoMap.containsKey(object.getClass())) {
+            throw new TypeNotSupportException("dao not support the class: " + object.getClass());
+        }
+        batchCreateMap.get(object.getClass()).add(object);
+    }
+
+    public void insert(List<?> list) throws TypeNotSupportException {
+        if (list.size() != 0) {
+            if (!daoMap.containsKey(list.get(0).getClass())) {
+                throw new TypeNotSupportException("dao not support the class: " + list.get(0).getClass());
             }
-            return result;
+            batchCreateMap.get(list.get(0).getClass()).addAll(list);
         }
     }
 
@@ -87,16 +128,19 @@ public class WalService {
             List<Class<?>> daos = ClassScanUtil.getClassByAnnotation(springbootApplication.getClass().getPackage().getName(), ClickHouseRepository.class);
             batchCreateMethodMap = new HashMap<>(daos.size());
             batchCreateMap = new ConcurrentHashMap<>(daos.size());
+            daoMap = new HashMap<>(daos.size());
             // get the batch create method and init the map
             for (Class<?> dao : daos) {
                 ClickHouseRepository clickHouseRepository = dao.getAnnotation(ClickHouseRepository.class);
                 batchCreateMap.put(clickHouseRepository.entity(), new ConcurrentLinkedQueue<>());
+                daoMap.put(clickHouseRepository.entity(), context.getBean(dao));
                 try {
                     batchCreateMethodMap.put(clickHouseRepository.entity(), dao.getMethod("batchCreate", List.class));
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();
                 }
             }
+            timer.addTask(new TimerTask(flushIntervalMs, this::flushAll));
         }
     }
 }

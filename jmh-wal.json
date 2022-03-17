@@ -1,0 +1,200 @@
+[
+    {
+        "jmhVersion" : "1.33",
+        "benchmark" : "asalty.fish.iotbigdata.benchmark.WalBenchMark.BatchInsertByDao",
+        "mode" : "thrpt",
+        "threads" : 12,
+        "forks" : 1,
+        "jvm" : "C:\\Users\\13090\\.jdks\\corretto-1.8.0_302\\jre\\bin\\java.exe",
+        "jvmArgs" : [
+            "-javaagent:D:\\Jetbrains\\apps\\IDEA-U\\ch-0\\213.5744.223\\lib\\idea_rt.jar=60633:D:\\Jetbrains\\apps\\IDEA-U\\ch-0\\213.5744.223\\bin",
+            "-Dfile.encoding=UTF-8"
+        ],
+        "jdkVersion" : "1.8.0_302",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.302-b08",
+        "warmupIterations" : 0,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 1,
+        "measurementTime" : "5 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 679.3152383189181,
+            "scoreError" : "NaN",
+            "scoreConfidence" : [
+                "NaN",
+                "NaN"
+            ],
+            "scorePercentiles" : {
+                "0.0" : 679.3152383189181,
+                "50.0" : 679.3152383189181,
+                "90.0" : 679.3152383189181,
+                "95.0" : 679.3152383189181,
+                "99.0" : 679.3152383189181,
+                "99.9" : 679.3152383189181,
+                "99.99" : 679.3152383189181,
+                "99.999" : 679.3152383189181,
+                "99.9999" : 679.3152383189181,
+                "100.0" : 679.3152383189181
+            },
+            "scoreUnit" : "ops/s",
+            "rawData" : [
+                [
+                    679.3152383189181
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.33",
+        "benchmark" : "asalty.fish.iotbigdata.benchmark.WalBenchMark.BatchInsertByWal",
+        "mode" : "thrpt",
+        "threads" : 12,
+        "forks" : 1,
+        "jvm" : "C:\\Users\\13090\\.jdks\\corretto-1.8.0_302\\jre\\bin\\java.exe",
+        "jvmArgs" : [
+            "-javaagent:D:\\Jetbrains\\apps\\IDEA-U\\ch-0\\213.5744.223\\lib\\idea_rt.jar=60633:D:\\Jetbrains\\apps\\IDEA-U\\ch-0\\213.5744.223\\bin",
+            "-Dfile.encoding=UTF-8"
+        ],
+        "jdkVersion" : "1.8.0_302",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.302-b08",
+        "warmupIterations" : 0,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 1,
+        "measurementTime" : "5 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 3588.47130387828,
+            "scoreError" : "NaN",
+            "scoreConfidence" : [
+                "NaN",
+                "NaN"
+            ],
+            "scorePercentiles" : {
+                "0.0" : 3588.47130387828,
+                "50.0" : 3588.47130387828,
+                "90.0" : 3588.47130387828,
+                "95.0" : 3588.47130387828,
+                "99.0" : 3588.47130387828,
+                "99.9" : 3588.47130387828,
+                "99.99" : 3588.47130387828,
+                "99.999" : 3588.47130387828,
+                "99.9999" : 3588.47130387828,
+                "100.0" : 3588.47130387828
+            },
+            "scoreUnit" : "ops/s",
+            "rawData" : [
+                [
+                    3588.47130387828
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.33",
+        "benchmark" : "asalty.fish.iotbigdata.benchmark.WalBenchMark.SingleInsertByDao",
+        "mode" : "thrpt",
+        "threads" : 12,
+        "forks" : 1,
+        "jvm" : "C:\\Users\\13090\\.jdks\\corretto-1.8.0_302\\jre\\bin\\java.exe",
+        "jvmArgs" : [
+            "-javaagent:D:\\Jetbrains\\apps\\IDEA-U\\ch-0\\213.5744.223\\lib\\idea_rt.jar=60633:D:\\Jetbrains\\apps\\IDEA-U\\ch-0\\213.5744.223\\bin",
+            "-Dfile.encoding=UTF-8"
+        ],
+        "jdkVersion" : "1.8.0_302",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.302-b08",
+        "warmupIterations" : 0,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 1,
+        "measurementTime" : "5 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 901.8162877803428,
+            "scoreError" : "NaN",
+            "scoreConfidence" : [
+                "NaN",
+                "NaN"
+            ],
+            "scorePercentiles" : {
+                "0.0" : 901.8162877803428,
+                "50.0" : 901.8162877803428,
+                "90.0" : 901.8162877803428,
+                "95.0" : 901.8162877803428,
+                "99.0" : 901.8162877803428,
+                "99.9" : 901.8162877803428,
+                "99.99" : 901.8162877803428,
+                "99.999" : 901.8162877803428,
+                "99.9999" : 901.8162877803428,
+                "100.0" : 901.8162877803428
+            },
+            "scoreUnit" : "ops/s",
+            "rawData" : [
+                [
+                    901.8162877803428
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.33",
+        "benchmark" : "asalty.fish.iotbigdata.benchmark.WalBenchMark.SingleInsertByWal",
+        "mode" : "thrpt",
+        "threads" : 12,
+        "forks" : 1,
+        "jvm" : "C:\\Users\\13090\\.jdks\\corretto-1.8.0_302\\jre\\bin\\java.exe",
+        "jvmArgs" : [
+            "-javaagent:D:\\Jetbrains\\apps\\IDEA-U\\ch-0\\213.5744.223\\lib\\idea_rt.jar=60633:D:\\Jetbrains\\apps\\IDEA-U\\ch-0\\213.5744.223\\bin",
+            "-Dfile.encoding=UTF-8"
+        ],
+        "jdkVersion" : "1.8.0_302",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.302-b08",
+        "warmupIterations" : 0,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 1,
+        "measurementTime" : "5 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 669813.2218706197,
+            "scoreError" : "NaN",
+            "scoreConfidence" : [
+                "NaN",
+                "NaN"
+            ],
+            "scorePercentiles" : {
+                "0.0" : 669813.2218706197,
+                "50.0" : 669813.2218706197,
+                "90.0" : 669813.2218706197,
+                "95.0" : 669813.2218706197,
+                "99.0" : 669813.2218706197,
+                "99.9" : 669813.2218706197,
+                "99.99" : 669813.2218706197,
+                "99.999" : 669813.2218706197,
+                "99.9999" : 669813.2218706197,
+                "100.0" : 669813.2218706197
+            },
+            "scoreUnit" : "ops/s",
+            "rawData" : [
+                [
+                    669813.2218706197
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    }
+]
+
+

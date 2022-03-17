@@ -1,5 +1,6 @@
-package asalty.fish.iotbigdata.proxy;
+package asalty.fish.iotbigdata.proxy.insert;
 
+import asalty.fish.iotbigdata.wal.WalService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -7,6 +8,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,20 +23,21 @@ import java.util.List;
 @Slf4j
 public class InsertProxyAop {
 
-    @Pointcut("@annotation(asalty.fish.iotbigdata.proxy.InsertProxy)")
+    @Pointcut("@annotation(asalty.fish.iotbigdata.proxy.insert.InsertProxy)")
     private void pointCut() {
     }
 
+    @Resource
+    InsertEntityProxy insertEntityProxy;
 
     @Around("pointCut()")
     public Object insertProxy(ProceedingJoinPoint joinPoint) throws Throwable {
-//        log.info(joinPoint.getArgs()[0].getClass().toString());
         if (joinPoint.getArgs()[0] instanceof List) {
-            log.info("batch");
             // handle list insert
+            insertEntityProxy.handleBatchInsert((List<?>) joinPoint.getArgs()[0]);
         } else {
-            log.info("single");
             // handle single insert
+            insertEntityProxy.handleSingleInsert(joinPoint.getArgs()[0]);
         }
 //        log.info("insertProxy");
         return null;

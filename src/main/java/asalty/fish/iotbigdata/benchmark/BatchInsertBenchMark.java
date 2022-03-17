@@ -22,6 +22,7 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -47,6 +48,8 @@ public class BatchInsertBenchMark {
 
     TestESTableDao testESTableDao;
 
+    static ThreadLocalRandom random = ThreadLocalRandom.current();
+
     int BATCH_SIZE = 10;
 
     @Setup(Level.Trial)
@@ -60,9 +63,8 @@ public class BatchInsertBenchMark {
         testCreateTables = getTestCreateEntitys(BATCH_SIZE);
     }
 
-    public TestCreateTable getTestCreateEntity() {
+    public static TestCreateTable getTestCreateEntity() {
         TestCreateTable h = new TestCreateTable();
-        Random random = new Random();
         h.setId((long) random.nextInt(1000000000));
         h.setGoodEvent("goodEvent" + random.nextInt(100000));
         h.setJavaEnable(random.nextBoolean());
@@ -75,7 +77,7 @@ public class BatchInsertBenchMark {
         return h;
     }
 
-    public List<TestCreateTable> getTestCreateEntitys(int size) {
+    public static List<TestCreateTable> getTestCreateEntitys(int size) {
         List<TestCreateTable> testCreateTables = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             testCreateTables.add(getTestCreateEntity());

@@ -1,6 +1,7 @@
 package asalty.fish.iotbigdata.benchmark;
 
 import asalty.fish.iotbigdata.IotBigDataApplication;
+import asalty.fish.iotbigdata.demo.dao.TestCreateTableDao;
 import asalty.fish.iotbigdata.job.Timer;
 import asalty.fish.iotbigdata.wal.WalService;
 import org.openjdk.jmh.annotations.*;
@@ -31,41 +32,43 @@ public class WalBenchMark {
 
     private ConfigurableApplicationContext context;
 
-    Map<String, String> map;
+    private TestCreateTableDao testCreateTableDao;
 
-    ConcurrentLinkedQueue<String> queue;
+    private WalService walService;
 
-    Timer timer;
+    private static int batchSize = 200;
 
     @Setup(Level.Trial)
     public void init() throws Exception {
         context = SpringApplication.run(IotBigDataApplication.class);
-        timer = context.getBean(Timer.class);
-        map = new ConcurrentHashMap<>();
-        queue = new ConcurrentLinkedQueue<>();
+        testCreateTableDao = context.getBean(TestCreateTableDao.class);
+        walService = context.getBean(WalService.class);
     }
 
     @Benchmark
-    public void testQueueAdd() {
-        queue.offer("test" + random.nextInt(1000));
+    public void SingleInsertByDao() throws Exception {
+        testCreateTableDao.create(BatchInsertBenchMark.getTestCreateEntity());
     }
 
     @Benchmark
-    public void testQueueRemove() {
-        queue.offer("test" + random.nextInt(1000));
-        queue.poll();
+    public void BatchInsertByDao() throws Exception {
+        testCreateTableDao.batchCreate(BatchInsertBenchMark.getTestCreateEntitys(batchSize));
     }
-
-    @TearDown
-    public void tearDown() throws Exception {
-        context.stop();
-        timer.destroy();
-    }
-
-    ThreadLocalRandom random = ThreadLocalRandom.current();
 
     @Benchmark
-    public void testHashMap() {map.put("test" + random.nextInt(1000), "test");}
+    public void SingleInsertByWal() throws Exception {
+        walService.insert(BatchInsertBenchMark.getTestCreateEntity());
+    }
+
+    @Benchmark
+    public void BatchInsertByWal() throws Exception {
+        walService.insert(BatchInsertBenchMark.getTestCreateEntitys(batchSize));
+    }
+
+    @TearDown(Level.Trial)
+    public void destroy() {
+        context.close();
+    }
 
     public static void main(String[] args) throws Exception {
         Options options = new OptionsBuilder()
