@@ -1,6 +1,8 @@
 package asalty.fish.iotbigdata.proxy.insert;
 
 import asalty.fish.clickhousejpa.exception.TypeNotSupportException;
+import asalty.fish.iotbigdata.cache.CaffeineCache;
+import asalty.fish.iotbigdata.cache.RedisCache;
 import asalty.fish.iotbigdata.wal.WalService;
 import org.springframework.stereotype.Service;
 
