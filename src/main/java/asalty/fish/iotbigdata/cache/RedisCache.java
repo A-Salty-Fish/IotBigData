@@ -32,7 +32,7 @@ public class RedisCache implements IotCache{
     public <T> T getByString(String key, Class<T> clazz) throws IotCacheException {
         String value = redisTemplate.opsForValue().get(prefix + key);
         if (value == null) {
-            throw new IotCacheException("key:" + key + " not exists");
+            return null;
         }
         log.info("get value from redis, key:{}, value:{}", key, value);
         return ThreadLocalGson.threadLocalGson.get().fromJson(value, clazz);
