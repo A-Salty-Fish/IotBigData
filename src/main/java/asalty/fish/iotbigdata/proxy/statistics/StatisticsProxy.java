@@ -15,4 +15,16 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface StatisticsProxy {
     String value() default "";
+
+    Class<?> esDocClass() default Object.class;
+
+    ResultType resultType() default ResultType.PLAIN;
+
+    enum ResultType {
+        PLAIN,
+        MIN,
+        MAX,
+        AVG,
+        SUM,
+    }
 }
