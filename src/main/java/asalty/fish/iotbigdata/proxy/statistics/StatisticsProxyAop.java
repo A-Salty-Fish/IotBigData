@@ -11,6 +11,9 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
@@ -36,12 +39,29 @@ public class StatisticsProxyAop {
 
     ConcurrentHashMap<Class<?>, ConcurrentLinkedQueue<Long>> esDocIdsMap = new ConcurrentHashMap<>();
 
+    ConcurrentHashMap<Class<?>, Class<?>> esDocDaoMap = new ConcurrentHashMap<>();
+
+    @Value("${statistics.enable: false}")
+    Boolean statisticsEnable;
+
+    @Value("${statistics.flushIntervalMs: 10000}")
+    Integer flushIntervalMs;
+
+    @Value("${statistics.preparedSize: 10000}")
+    Integer preparedSize;
+
+    @Autowired
+    ConfigurableApplicationContext context;
+
     @Pointcut("@annotation(asalty.fish.iotbigdata.proxy.statistics.StatisticsProxy)")
     private void pointCut() {
     }
 
     @Around("pointCut()")
     public Object statisticsProxy(ProceedingJoinPoint joinPoint) throws Throwable {
+        if (!statisticsEnable) {
+            return joinPoint.proceed();
+        }
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
         StatisticsProxy statisticsProxy = method.getAnnotation(StatisticsProxy.class);
@@ -50,6 +70,7 @@ public class StatisticsProxyAop {
             return joinPoint.proceed();
         }
         Class<?> esDocClass = statisticsProxy.esDocClass();
+        esDocDaoMap.putIfAbsent(esDocClass, context.getBean(esDocClass.getSimpleName() + "Dao").getClass());
         // check if the arg annotation is legal
         List<Object> deviceId = new ArrayList<>(joinPoint.getArgs().length);
         List<Object> beginDate = new ArrayList<>(joinPoint.getArgs().length);
@@ -77,12 +98,11 @@ public class StatisticsProxyAop {
         }
         // try get prepared result from es
         Object esResult = tryGetResultFromEs(
-                esDocClass,
+                statisticsProxy,
                 deviceId.size() == 1 ? deviceId.get(0) : null,
                 beginDate.size() == 1 ? beginDate.get(0) : null,
                 endDate.size() == 1 ? endDate.get(0) : null,
-                geoPoint.size() == 1 ? geoPoint.get(0) : null,
-                resultType
+                geoPoint.size() == 1 ? geoPoint.get(0) : null
         );
         if (esResult == null) {
             esResult = joinPoint.proceed();
@@ -90,35 +110,35 @@ public class StatisticsProxyAop {
         return esResult;
     }
 
-    public Object tryGetResultFromEs(Class<?> esDocClass, Object deviceId, Object beginDate, Object endDate, Object geoPoint, StatisticsProxy.ResultType resultType) {
+    public Object tryGetResultFromEs(StatisticsProxy statisticsProxy, Object deviceId, Object beginDate, Object endDate, Object geoPoint) {
         if (deviceId == null && beginDate == null && endDate == null && geoPoint == null) {
-            return doGetResultFromEsWithoutConstrain(esDocClass, resultType);
+            return doGetResultFromEsWithoutConstrain(statisticsProxy);
         }
         if (beginDate == null && endDate == null && geoPoint == null) {
-            return doGetResultFromEsWithDeviceId(esDocClass, deviceId, resultType);
+            return doGetResultFromEsWithDeviceId(statisticsProxy, deviceId);
         }
         if (deviceId == null && beginDate == null && endDate == null) {
-            return doGetResultFromEsWithGeo(esDocClass, geoPoint, resultType);
+            return doGetResultFromEsWithGeo(statisticsProxy, geoPoint);
         }
         if (deviceId == null && geoPoint == null) {
-            return doGetResultFromEsWithBeginAndEndDate(esDocClass, beginDate, endDate, resultType);
+            return doGetResultFromEsWithBeginAndEndDate(statisticsProxy, beginDate, endDate);
         }
         return null;
     }
 
-    public Object doGetResultFromEsWithoutConstrain(Class<?> esDocClass, StatisticsProxy.ResultType resultType) {
+    public Object doGetResultFromEsWithoutConstrain(StatisticsProxy statisticsProxy) {
         return null;
     }
 
-    public Object doGetResultFromEsWithDeviceId(Class<?> esDocClass, Object deviceId, StatisticsProxy.ResultType resultType) {
+    public Object doGetResultFromEsWithDeviceId(StatisticsProxy statisticsProxy, Object deviceId) {
         return null;
     }
 
-    public Object doGetResultFromEsWithBeginAndEndDate(Class<?> esDocClass, Object beginDate, Object endDate, StatisticsProxy.ResultType resultType) {
+    public Object doGetResultFromEsWithBeginAndEndDate(StatisticsProxy statisticsProxy, Object beginDate, Object endDate) {
         return null;
     }
 
-    public Object doGetResultFromEsWithGeo(Class<?> esDocClass, Object geoPoint, StatisticsProxy.ResultType resultType) {
+    public Object doGetResultFromEsWithGeo(StatisticsProxy statisticsProxy, Object geoPoint) {
         return null;
     }
 
