@@ -97,7 +97,12 @@ public class StatisticsProxyAop {
         if (beginDate == null && endDate == null && geoPoint == null) {
             return doGetResultFromEsWithDeviceId(esDocClass, deviceId, resultType);
         }
-
+        if (deviceId == null && beginDate == null && endDate == null) {
+            return doGetResultFromEsWithGeo(esDocClass, geoPoint, resultType);
+        }
+        if (deviceId == null && geoPoint == null) {
+            return doGetResultFromEsWithBeginAndEndDate(esDocClass, beginDate, endDate, resultType);
+        }
         return null;
     }
 

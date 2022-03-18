@@ -39,5 +39,5 @@ public class StatisticEsEntity {
 
     private Long geoHash;
 
-    private int geoLevel;
+    private Integer geoLevel;
 }
