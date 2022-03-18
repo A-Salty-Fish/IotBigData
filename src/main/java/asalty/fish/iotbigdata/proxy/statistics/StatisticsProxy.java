@@ -18,6 +18,8 @@ public @interface StatisticsProxy {
 
     Class<?> esDocClass() default Object.class;
 
+    String propertyName() default "";
+
     ResultType resultType() default ResultType.PLAIN;
 
     enum ResultType {

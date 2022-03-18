@@ -81,3 +81,7 @@ wal:
   enabled: true
   flushIntervalMs: 1000
   flushSize: 200
+statistics:
+  enabled: true
+  flushIntervalMs: 100000
+  preparedSize: 100
