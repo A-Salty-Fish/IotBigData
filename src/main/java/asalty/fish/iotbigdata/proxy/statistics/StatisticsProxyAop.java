@@ -17,6 +17,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +71,7 @@ public class StatisticsProxyAop {
             return joinPoint.proceed();
         }
         Class<?> esDocClass = statisticsProxy.esDocClass();
+        // Get the esDocDao
         esDocDaoMap.putIfAbsent(esDocClass, context.getBean(esDocClass.getSimpleName() + "Dao").getClass());
         // check if the arg annotation is legal
         List<Object> deviceId = new ArrayList<>(joinPoint.getArgs().length);
@@ -131,6 +133,20 @@ public class StatisticsProxyAop {
     }
 
     public Object doGetResultFromEsWithDeviceId(StatisticsProxy statisticsProxy, Object deviceId) {
+//        Class<?> esDocClass = statisticsProxy.esDocClass();
+//        Class<?> esDocDaoClass = esDocDaoMap.get(esDocClass);
+//        String propertyName = statisticsProxy.propertyName();
+//        try {
+//            Method method = esDocDaoClass.getMethod("getAllByDeviceIdNameAndPropertyName", Long.class, String.class);
+//            List<?> result = (List<?>) method.invoke(context.getBean(esDocDaoClass.getSimpleName()), deviceId, propertyName);
+//            switch (statisticsProxy.resultType()) {
+//                case SUM:
+//                    return result.stream().mapToDouble(o -> (double) o).sum();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
         return null;
     }
 
