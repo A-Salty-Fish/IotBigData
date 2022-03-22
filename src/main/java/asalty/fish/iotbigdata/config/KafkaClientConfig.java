@@ -18,10 +18,10 @@ import java.util.Properties;
 @Configuration
 public class KafkaClientConfig {
 
-    @KafkaListener(topics = "test", groupId = "test")
-    public void listen(String content) {
-        System.out.println("accept:" + content);
-    }
+//    @KafkaListener(topics = "test", groupId = "test")
+//    public void listen(String content) {
+//        System.out.println("accept:" + content);
+//    }
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
