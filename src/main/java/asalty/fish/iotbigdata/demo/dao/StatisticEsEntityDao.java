@@ -9,6 +9,4 @@ import java.util.List;
 @Repository
 public interface StatisticEsEntityDao extends ElasticsearchRepository<StatisticEsEntity, String> {
 
-    List<StatisticEsEntity> getAllByDeviceIdNameAndPropertyName(Long deviceId, String propertyName);
-
 }
