@@ -1,4 +1,4 @@
-package asalty.fish.iotbigdata.api;
+package asalty.fish.iotbigdata.api.insert;
 
 /**
  * @author 13090
@@ -7,5 +7,5 @@ package asalty.fish.iotbigdata.api;
  * @date 2022/3/18 16:42
  */
 
-public class RESTApi {
+public class RestInsert {
 }

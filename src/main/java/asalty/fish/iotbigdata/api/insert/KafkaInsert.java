@@ -1,4 +1,4 @@
-package asalty.fish.iotbigdata.api;
+package asalty.fish.iotbigdata.api.insert;
 
 import asalty.fish.iotbigdata.config.KafkaClientConfig;
 import lombok.extern.slf4j.Slf4j;
