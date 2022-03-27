@@ -1,4 +1,4 @@
-package asalty.fish.iotbigdata.api;
+package asalty.fish.iotbigdata.demo.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

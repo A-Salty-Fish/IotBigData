@@ -20,19 +20,19 @@ import java.time.LocalDateTime;
 public class IotEntity2 {
     // 设备编号
     @ClickHouseColumn(isPrimaryKey = true)
-    private Long DeviceId;
+    public Long DeviceId;
 
-    private Long Value1;
+    public Long Value1;
 
-    private Long Value2;
+    public Long Value2;
 
-    private Double Value3;
+    public Double Value3;
 
-    private Double Value4;
+    public Double Value4;
 
     // 上报时间
-    private LocalDateTime UpdateDateTime;
+    public Long UpdateDateTime;
 
     // 设备地理位置
-    private Long GeoHash;
+    public Long GeoHash;
 }
