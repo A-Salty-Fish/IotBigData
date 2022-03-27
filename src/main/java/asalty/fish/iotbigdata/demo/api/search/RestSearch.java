@@ -1,4 +1,4 @@
-package asalty.fish.iotbigdata.api.search;
+package asalty.fish.iotbigdata.demo.api.search;
 
 /**
  * @author 13090
