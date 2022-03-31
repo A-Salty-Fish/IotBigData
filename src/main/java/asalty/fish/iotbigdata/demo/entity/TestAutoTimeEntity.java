@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @ClickHouseEntity
 @ClickHouseTable(name = "TestAutoTimeEntity", engine = ClickHouseEngine.MergeTree)
 @ClickHouseTimeColumns
+@ClickHouseGeoColumns
 public class TestAutoTimeEntity {
     @ClickHouseColumn(isPrimaryKey = true)
     public Long id;
