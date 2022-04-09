@@ -35,4 +35,19 @@ public class TestCreateTableService {
     public String read(String id) {
         return "test" + id;
     }
+
+    @ReadProxy
+    public Long maxValue1() {
+        return testCreateTableDao.maxWatchID();
+    }
+
+    @ReadProxy
+    public Double avgValue1() {
+        return testCreateTableDao.avgWatchID();
+    }
+
+    @ReadProxy
+    public Long maxValueByBit(Long WatchID, Long bit) {
+        return testCreateTableDao.maxWatchIDByBit(WatchID, bit);
+    }
 }
